@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {
-  AcrolinxSidebarApp,
+  AcrolinxSidebarApp, AppApiCapability,
   createAcrolinxApp,
   ExtractedTextEvent,
   OffsetRange,
@@ -67,6 +67,8 @@ class MyApp implements AcrolinxSidebarApp {
     text: 'Extract Text',
     tooltip: 'Extract text and select words in the document'
   };
+
+  requires = [AppApiCapability.selectRanges]
 
   markings: Marking[] =  [];
   rootElement =  document.getElementById('root')!;

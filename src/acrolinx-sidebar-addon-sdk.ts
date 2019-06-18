@@ -11,6 +11,7 @@ export interface ExtractedTextLinkEvent {
 export interface AcrolinxSidebarApp {
   title: string;
   button?: AddonButtonConfig;
+  requires?: AppApiCapability[];
   onTextExtractedLink?(event: ExtractedTextLinkEvent): void;
   onTextExtracted?(event: ExtractedTextEvent): void;
 }
@@ -24,9 +25,15 @@ enum ReportType {
   extractedText = 'extractedText'
 }
 
+export enum AppApiCapability {
+  selectRanges
+}
+
+
 interface SidebarAddonConfig {
   title: string;
   button?: AddonButtonConfig;
+  requires?: AppApiCapability[];
   requiredReportLinks: readonly ReportType[];
   requiredReportContent: readonly ReportType[];
 }
@@ -50,6 +57,7 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
     title: app.title,
     button: app.button,
+    requires: app.requires,
     requiredReportLinks: (app.onTextExtractedLink) ? [ReportType.extractedText] : [],
     requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText] : []
   });
