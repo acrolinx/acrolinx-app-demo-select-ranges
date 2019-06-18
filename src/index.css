@@ -1,22 +1,21 @@
 html, body {
-  height: 100%;
-  margin: 0;
+  margin: 5px;
   padding: 0;
-  overflow: hidden;
   font-family: Roboto, Helvetica, Arial, Sans-Serif;
   font-size: 16px;
 }
 
-#root,
-#root > div {
-  height: 100%;
+.word {
+  background-color: #ffff88;
+  padding: 6px;
+  line-height: 16px;
+  font-size: 16px;
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 3px;
 }
 
-svg {
-  transform: scale(1.4);
-}
-
-.message {
-  padding: 10px;
-  text-align: center;
+.word:hover {
+  background: yellow;
 }

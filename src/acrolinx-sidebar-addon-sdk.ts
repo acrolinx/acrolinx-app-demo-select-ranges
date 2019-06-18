@@ -21,7 +21,7 @@ export interface AddonButtonConfig {
 }
 
 enum ReportType {
-  extractedText4App = 'extractedText4App'
+  extractedText = 'extractedText'
 }
 
 interface SidebarAddonConfig {
@@ -50,8 +50,8 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
     title: app.title,
     button: app.button,
-    requiredReportLinks: (app.onTextExtractedLink) ? [ReportType.extractedText4App] : [],
-    requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText4App] : []
+    requiredReportLinks: (app.onTextExtractedLink) ? [ReportType.extractedText] : [],
+    requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText] : []
   });
 
   window.addEventListener('message', event => {
@@ -61,7 +61,7 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
 
       const analysisResult: AnalysisResult = event.data;
       const reports = analysisResult.reports;
-      const textExtractedReport = reports[ReportType.extractedText4App] || {};
+      const textExtractedReport = reports[ReportType.extractedText] || {};
 
       if (app.onTextExtractedLink && textExtractedReport.url) {
         app.onTextExtractedLink({url: textExtractedReport.url, languageId: analysisResult.languageId});
@@ -84,10 +84,24 @@ export function openWindow(url: string) {
   }
 }
 
+
+export interface OffsetRange {
+  begin: number;
+  end: number;
+}
+
+export function selectRanges(ranges: OffsetRange[]) {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({command: 'acrolinx.sidebar.selectRanges', ranges}, '*');
+  } else {
+    console.warn('selectRanges: Missing parent window with sidebar.', ranges);
+  }
+}
+
 function configureAddon(config: SidebarAddonConfig) {
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({command: 'acrolinx.sidebar.configureAddon', config: config}, '*');
   } else {
-    console.warn('configureAddon: Missing parent window with sidebar.')
+    console.warn('configureAddon: Missing parent window with sidebar.', config);
   }
 }

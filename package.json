@@ -1,5 +1,5 @@
 {
-  "name": "wordcloud-sidebar-addon",
+  "name": "select-demo-sidebar-addon",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,8 +12,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "typescript": "3.4.5",
-    "react-wordcloud": "^1.0.5"
+    "typescript": "3.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
