@@ -116,7 +116,7 @@ export function replaceRanges(ranges: OffsetRangeWithReplacement[]) {
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({command: 'acrolinx.sidebar.replaceRanges', ranges}, '*');
   } else {
-    console.warn('selectRanges: Missing parent window with sidebar.', ranges);
+    console.warn('replaceRanges: Missing parent window with sidebar.', ranges);
   }
 }
 
