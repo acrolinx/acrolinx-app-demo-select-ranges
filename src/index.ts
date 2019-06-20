@@ -3,12 +3,13 @@ import {
   AcrolinxSidebarApp, AppApiCapability,
   createAcrolinxApp,
   ExtractedTextEvent,
-  OffsetRange,
+  OffsetRange, replaceRanges,
   selectRanges
 } from './acrolinx-sidebar-addon-sdk';
 import './index.css';
 
 interface WordOccurrence {
+  surface: string;
   range: OffsetRange;
 }
 
@@ -17,7 +18,7 @@ function findWords(text: string): WordOccurrence[] {
   const regex = /[^\s.,:"]+/g;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(text)) !== null) {
-    result.push({range: {begin: match.index, end: match.index + match[0].length}})
+    result.push({surface: match[0], range: {begin: match.index, end: match.index + match[0].length}})
   }
   return result;
 }
@@ -70,8 +71,8 @@ class MyApp implements AcrolinxSidebarApp {
 
   requires = [AppApiCapability.selectRanges]
 
-  markings: Marking[] =  [];
-  rootElement =  document.getElementById('root')!;
+  markings: Marking[] = [];
+  rootElement = document.getElementById('root')!;
 
   init() {
     this.rootElement.addEventListener('click', (ev: MouseEvent) => {
@@ -80,6 +81,17 @@ class MyApp implements AcrolinxSidebarApp {
       console.log('Click', marking);
       if (marking) {
         selectRanges([marking]);
+      }
+    })
+    this.rootElement.addEventListener('dblclick', (ev: MouseEvent) => {
+      const markingId = (ev.target as HTMLElement).id;
+      const marking = _.find(this.markings, {id: markingId});
+      console.log('DoubleClick', marking);
+      if (marking) {
+        replaceRanges([{
+          ...marking,
+          replacement: marking.word.surface.toUpperCase() + '!'
+        }]);
       }
     })
   }

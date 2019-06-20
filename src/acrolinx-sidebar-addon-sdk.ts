@@ -98,9 +98,23 @@ export interface OffsetRange {
   end: number;
 }
 
+export interface OffsetRangeWithReplacement {
+  replacement: string;
+  begin: number;
+  end: number;
+}
+
 export function selectRanges(ranges: OffsetRange[]) {
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({command: 'acrolinx.sidebar.selectRanges', ranges}, '*');
+  } else {
+    console.warn('selectRanges: Missing parent window with sidebar.', ranges);
+  }
+}
+
+export function replaceRanges(ranges: OffsetRangeWithReplacement[]) {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({command: 'acrolinx.sidebar.replaceRanges', ranges}, '*');
   } else {
     console.warn('selectRanges: Missing parent window with sidebar.', ranges);
   }

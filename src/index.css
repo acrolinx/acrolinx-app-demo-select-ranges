@@ -3,6 +3,7 @@ html, body {
   padding: 0;
   font-family: Roboto, Helvetica, Arial, Sans-Serif;
   font-size: 16px;
+  user-select: none;
 }
 
 .word {
