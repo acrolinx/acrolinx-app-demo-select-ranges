@@ -8,12 +8,17 @@ export interface ExtractedTextLinkEvent {
   url: string;
 }
 
+export interface TextRangesExpiredEvent {
+  ranges: OffsetRange[];
+}
+
 export interface AcrolinxSidebarApp {
   title: string;
   button?: AddonButtonConfig;
   requires?: AppApiCapability[];
   onTextExtractedLink?(event: ExtractedTextLinkEvent): void;
   onTextExtracted?(event: ExtractedTextEvent): void;
+  onTextRangesExpired?(event: TextRangesExpiredEvent): void;
 }
 
 export interface AddonButtonConfig {
@@ -47,11 +52,19 @@ interface ReportForAddon {
   content?: string;
 }
 
-interface AnalysisResult {
+export type EventForApp = AnalysisResultEvent | InvalidateRangesEvent;
+
+interface AnalysisResultEvent {
   type: 'analysisResult';
   languageId: string;
   reports: ReportsForAddon;
 }
+
+interface InvalidateRangesEvent {
+  type: 'invalidRanges';
+  ranges: OffsetRange[];
+}
+
 
 export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
@@ -62,12 +75,19 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
     requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText] : []
   });
 
-  window.addEventListener('message', event => {
-    console.log('Got message from sidebar', event);
-    if (event.data && event.data.type === 'analysisResult') {
+  window.addEventListener('message', messageEvent => {
+    console.log('Got message from sidebar', messageEvent);
+
+    const eventForApp = messageEvent.data
+
+    if (!eventForApp) {
+      return;
+    }
+
+    if (eventForApp.type === 'analysisResult') {
       // TODO: Error handling if analysisResult is not like expected.
 
-      const analysisResult: AnalysisResult = event.data;
+      const analysisResult: AnalysisResultEvent = eventForApp;
       const reports = analysisResult.reports;
       const textExtractedReport = reports[ReportType.extractedText] || {};
 
@@ -77,6 +97,11 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
 
       if (app.onTextExtracted && typeof textExtractedReport.content === 'string') {
         app.onTextExtracted({text: textExtractedReport.content, languageId: analysisResult.languageId});
+      }
+    } else if (eventForApp.type === 'invalidRanges') {
+      const invalidateRangesEvent: InvalidateRangesEvent = eventForApp;
+      if (app.onTextRangesExpired) {
+          app.onTextRangesExpired((invalidateRangesEvent));
       }
     }
   }, false);

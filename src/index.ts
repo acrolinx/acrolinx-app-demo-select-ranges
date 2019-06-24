@@ -1,10 +1,13 @@
 import * as _ from 'lodash';
 import {
-  AcrolinxSidebarApp, AppApiCapability,
+  AcrolinxSidebarApp,
+  AppApiCapability,
   createAcrolinxApp,
   ExtractedTextEvent,
-  OffsetRange, replaceRanges,
-  selectRanges
+  OffsetRange,
+  replaceRanges,
+  selectRanges,
+  TextRangesExpiredEvent
 } from './acrolinx-sidebar-addon-sdk';
 import './index.css';
 
@@ -101,6 +104,27 @@ class MyApp implements AcrolinxSidebarApp {
     this.markings = markings;
     this.rootElement.innerHTML = html;
   }
+
+  onTextRangesExpired(event: TextRangesExpiredEvent): void {
+    console.warn('onTextRangesExpired', event);
+    const [expiredMarkings, validMarkings] = _.partition(this.markings, marking =>
+      event.ranges.some(range =>
+        (range.begin <= marking.begin && marking.begin < range.end) ||
+        (range.begin <= marking.end && marking.end < range.end)
+      )
+    );
+
+    console.log(expiredMarkings, validMarkings);
+    this.markings = validMarkings;
+    expiredMarkings.forEach(marking => {
+      const element = document.getElementById(marking.id);
+      if (element) {
+        element.className = '';
+      }
+    });
+
+  }
+
 }
 
 const acrolinxSidebarApp = createAcrolinxApp(new MyApp());
