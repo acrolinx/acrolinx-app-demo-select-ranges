@@ -19,6 +19,7 @@ export interface AcrolinxSidebarApp {
   onTextExtractedLink?(event: ExtractedTextLinkEvent): void;
   onTextExtracted?(event: ExtractedTextEvent): void;
   onTextRangesExpired?(event: TextRangesExpiredEvent): void;
+  appSignature: string;
 }
 
 export interface AddonButtonConfig {
@@ -41,6 +42,7 @@ interface SidebarAddonConfig {
   requires?: AppApiCapability[];
   requiredReportLinks: readonly ReportType[];
   requiredReportContent: readonly ReportType[];
+  appSignature: string;
 }
 
 export type ReportsForAddon = {
@@ -72,7 +74,8 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
     button: app.button,
     requires: app.requires,
     requiredReportLinks: (app.onTextExtractedLink) ? [ReportType.extractedText] : [],
-    requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText] : []
+    requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText] : [],
+    appSignature: app.appSignature
   });
 
   window.addEventListener('message', messageEvent => {
