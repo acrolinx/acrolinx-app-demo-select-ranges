@@ -32,7 +32,7 @@ enum ReportType {
 }
 
 export enum AppApiCapability {
-  selectRanges
+  selectRanges = 'selectRanges'
 }
 
 
