@@ -1,5 +1,7 @@
 # Select Ranges - Acrolinx App Demo
 
+Acrolinx app that demonstrates how to interact with the document (select ranges, replace ranges)
+
 ## Available Scripts
 
 In the project directory, you can run:
