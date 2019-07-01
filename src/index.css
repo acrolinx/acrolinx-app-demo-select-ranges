@@ -27,7 +27,8 @@ input {
 }
 
 main {
-  margin: 10px;
+  overflow: hidden;
+  padding: 10px;
 }
 
 .marking {
