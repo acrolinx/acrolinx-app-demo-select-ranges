@@ -11,7 +11,7 @@ header {
   position: -webkit-sticky;
   position: sticky;
   top: 0px;
-  padding: 0.5em 0 0.5em 5px;
+  padding: 0.5em 0 0.5em 10px;
   background: white;
   white-space: nowrap;
   display: block;
@@ -27,7 +27,7 @@ input {
 }
 
 main {
-  margin: 5px;
+  margin: 10px;
 }
 
 .marking {
