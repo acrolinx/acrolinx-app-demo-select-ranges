@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import './index.css';
 import {Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
-import {ApiCommands, ApiEvents, ExtractedTextEvent, initApi, isInvalid, TextRangesExpiredEvent} from './sdk';
+import {ApiCommands, ApiEvents, ExtractedTextEvent, initApi, isInvalid, TextRangesExpiredEvent} from '@acrolinx/app-sdk';
 
 const appApi = initApi({
   title: 'Select Ranges',
@@ -45,7 +45,6 @@ function startApp() {
   mainElement.addEventListener('click', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
     const marking = _.find(markings, {id: markingId});
-    console.log('Click', marking);
     if (marking) {
       appApi.commands.selectRanges([marking]);
     }
@@ -54,7 +53,6 @@ function startApp() {
   mainElement.addEventListener('dblclick', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
     const marking = _.find(markings, {id: markingId});
-    console.log('DoubleClick', marking);
     if (marking) {
       appApi.commands.replaceRanges([{
         ...marking,
@@ -66,12 +64,10 @@ function startApp() {
   appApi.events.textExtracted.addEventListener(onTextExtracted)
 
   appApi.events.invalidRanges.addEventListener((event: TextRangesExpiredEvent) => {
-    console.warn('onTextRangesExpired', event);
     const [expiredMarkings, validMarkings] = _.partition(markings, marking =>
       isInvalid(event, marking)
     );
 
-    console.log(expiredMarkings, validMarkings);
     markings = validMarkings;
     expiredMarkings.forEach(marking => {
       const element = document.getElementById(marking.id);

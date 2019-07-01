@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {OffsetRange} from './sdk/raw';
+import {OffsetRange} from '@acrolinx/app-sdk';
 
 export const MARKING_CSS_CLASS = 'marking';
 
