@@ -19,11 +19,12 @@ const appApi = initApi({
 
 function startApp() {
   let markings: Marking[] = [];
-  const rootElement = document.getElementById('root')!;
+  const mainElement = document.querySelector('main')!;
+  const matchRegExpElement = document.querySelector<HTMLInputElement>('#matchRegExp')!;
 
-  function findMatches(text: string): Match[] {
+  function findMatches(text: string, pattern: string): Match[] {
     const result: Match[] = [];
-    const regex = /[^\s.,:"]+/g;
+    const regex = new RegExp(pattern, 'g');
     let match: RegExpExecArray | null;
     while ((match = regex.exec(text)) !== null) {
       result.push({surface: match[0], range: {begin: match.index, end: match.index + match[0].length}})
@@ -32,12 +33,16 @@ function startApp() {
   }
 
   function onTextExtracted(event: ExtractedTextEvent) {
-    const markedIssuesResult = markIssues(event.text, findMatches(event.text));
-    markings = markedIssuesResult.markings;
-    rootElement.innerHTML = markedIssuesResult.html;
+    try {
+      const markedIssuesResult = markIssues(event.text, findMatches(event.text, matchRegExpElement.value));
+      markings = markedIssuesResult.markings;
+      mainElement.innerHTML = markedIssuesResult.html;
+    } catch (e) {
+      mainElement.innerText = e.message;
+    }
   }
 
-  rootElement.addEventListener('click', (ev: MouseEvent) => {
+  mainElement.addEventListener('click', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
     const marking = _.find(markings, {id: markingId});
     console.log('Click', marking);
@@ -46,7 +51,7 @@ function startApp() {
     }
   })
 
-  rootElement.addEventListener('dblclick', (ev: MouseEvent) => {
+  mainElement.addEventListener('dblclick', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
     const marking = _.find(markings, {id: markingId});
     console.log('DoubleClick', marking);
