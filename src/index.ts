@@ -96,7 +96,7 @@ function startApp() {
     });
   });
 
-  const useDummyData = window.location.href.includes('usedummydata');
+  const useDummyData = _.includes(window.location.href, 'usedummydata');
   onTextExtracted({
     text: useDummyData ? 'This is an errorr and an problemm.' : '',
     languageId: 'en'
