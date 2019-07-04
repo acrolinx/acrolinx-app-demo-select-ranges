@@ -42,11 +42,11 @@ export function createMarkedHtml(text: string, sortedMarkings: readonly Marking[
   let pos = 0;
   let outputHtml = '';
 
-  for (const marking of sortedMarkings) {
+  sortedMarkings.forEach(marking => {
     outputHtml += escapeText(text.substring(pos, marking.begin));
     outputHtml += createMarkingHtml(marking, text);
     pos = marking.end;
-  }
+  });
 
   outputHtml += escapeText(text.substring(pos));
   return outputHtml;
