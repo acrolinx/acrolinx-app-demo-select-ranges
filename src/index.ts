@@ -19,7 +19,14 @@ import './index.css';
 import {Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
 
 
-import {ApiCommands, ApiEvents, ExtractedTextEvent, initApi, isInvalid, TextRangesExpiredEvent} from '@acrolinx/app-sdk';
+import {
+  ApiCommands,
+  ApiEvents,
+  ExtractedTextEvent,
+  initApi,
+  isInvalid,
+  TextRangesExpiredEvent
+} from '@acrolinx/app-sdk';
 
 const appApi = initApi({
   title: 'Select Ranges',
@@ -44,7 +51,7 @@ function startApp() {
     const result: Match[] = [];
     const regex = new RegExp(pattern, 'g');
     let match: RegExpExecArray | null;
-    while ((match = regex.exec(text)) !== null) {
+    while ((match = regex.exec(text)) !== null && match.index < text.length) {
       result.push({surface: match[0], range: {begin: match.index, end: match.index + match[0].length}})
     }
     return result;
