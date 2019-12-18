@@ -6,23 +6,34 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@acrolinx/app-sdk": "0.0.11",
-    "@types/jest": "24.0.17",
+    "@acrolinx/app-sdk": "0.0.12",
     "@types/lodash": "^4.14.136",
-    "@types/node": "12.7.2",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.8.5",
     "lodash": "^4.17.15",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "@types/chromedriver": "^2.38.0",
+    "@types/jest": "^24.0.23",
+    "@types/node": "12.7.2",
+    "@types/selenium-webdriver": "^4.0.6",
+    "browser-sync": "^2.26.7",
+    "chromedriver": "^78.0.1",
+    "dotenv": "^8.2.0",
+    "jest": "^24.9.0",
+    "jest-junit": "^10.0.0",
     "react-scripts": "^3.3.0",
-    "typescript": "3.5.3"
+    "selenium-webdriver": "^3.6.0",
+    "ts-jest": "^24.2.0",
+    "typescript": "3.7.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "startHttps": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject",
     "tsc": "tsc"
   },
@@ -41,5 +52,14 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "./"
+  "homepage": "./",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  },
+  "jest-junit": {
+    "outputDirectory": "tmp",
+    "outputName": "junit.xml"
+  }
 }
