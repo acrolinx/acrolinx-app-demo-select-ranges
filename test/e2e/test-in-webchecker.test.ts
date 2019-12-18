@@ -47,7 +47,7 @@ describe('live demo', () => {
 
   it('select ranges app and extract text', async () => {
     await driver.sleep(500);
-    driver.findElement(By.id('selectRanges')).click();
+    await driver.findElement(By.id('selectRanges')).click();
     driver.findElement(By.xpath('//button[text() = "EXTRACT TEXT"]')).click();
 
     const appIframe = driver.findElement(By.css('.tab-content--active.selectRangesTab iframe'));
