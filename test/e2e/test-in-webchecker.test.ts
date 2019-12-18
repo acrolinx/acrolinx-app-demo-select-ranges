@@ -1,5 +1,6 @@
 import chromedriver from 'chromedriver';
 import * as dotenv from 'dotenv';
+import fs from 'fs';
 import webdriver from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 
@@ -48,6 +49,10 @@ describe('live demo', () => {
   it('select ranges app and extract text', async () => {
     await driver.sleep(500);
     await driver.findElement(By.id('selectRanges')).click();
+
+    const screenShotBase64Encoded = await driver.takeScreenshot();
+    fs.writeFileSync('tmp/before-extract-text.png', screenShotBase64Encoded, 'base64');
+
     driver.findElement(By.xpath('//button[text() = "EXTRACT TEXT"]')).click();
 
     const appIframe = driver.findElement(By.css('.tab-content--active.selectRangesTab iframe'));
