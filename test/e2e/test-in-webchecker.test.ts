@@ -51,8 +51,9 @@ describe('live demo', () => {
   });
 
   it('select ranges app and extract text', async () => {
+    const selectRangesTabHeader = await driver.findElement(By.id('selectRanges'));
     await driver.sleep(500);
-    await driver.findElement(By.id('selectRanges')).click();
+    await selectRangesTabHeader.click();
 
     const screenShotBase64Encoded = await driver.takeScreenshot();
     fs.writeFileSync('tmp/before-extract-text.png', screenShotBase64Encoded, 'base64');
