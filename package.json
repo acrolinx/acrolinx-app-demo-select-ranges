@@ -56,7 +56,11 @@
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
-    }
+    },
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   },
   "jest-junit": {
     "outputDirectory": "tmp",

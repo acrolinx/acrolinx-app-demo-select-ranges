@@ -21,6 +21,10 @@ describe('live demo', () => {
   jest.setTimeout(TIMEOUT_MS);
 
   beforeEach(async () => {
+    if (!fs.existsSync('./tmp')){
+      fs.mkdirSync('./tmp');
+    }
+
     driver = new webdriver.Builder()
       .forBrowser('chrome')
       .setChromeOptions(new chrome.Options().headless())
