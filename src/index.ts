@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-import * as _ from 'lodash';
-import './index.css';
-import {Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
-
-
 import {
   ApiCommands,
   ApiEvents,
@@ -27,9 +22,14 @@ import {
   isInvalid,
   TextRangesExpiredEvent
 } from '@acrolinx/app-sdk';
+import * as _ from 'lodash';
+import packageJson from '../package.json';
+import './index.css';
+import {Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
 
 const appApi = initApi({
   title: 'Select Ranges',
+  version: packageJson.version,
   appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU2VsZWN0IFJhbmdlcyIsImlkIjoiYzJlZTZjMGItMThhMC00YjI3LWFiNzctYWY2NjQzODUxMzQ5IiwidHlwZSI6IkFQUCIsImlhdCI6MTU2MTY0NzQ5MX0.hqHcZBKduKjElLl5a4Mo8Tf6GdCnEPR9iBD9QmuiRU0',
 
   button: {

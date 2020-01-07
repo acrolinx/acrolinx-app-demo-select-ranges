@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import fs from 'fs';
 import webdriver from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
+import packageJson from '../../package.json';
 
 const By = webdriver.By;
 chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
@@ -61,7 +62,7 @@ describe('live demo', () => {
     await driver.findElement(By.className('icon-about')).click();
     const versionElementLocator = By.xpath('//div[@class="about-tab-label" and text()="Select Ranges"]/following-sibling::div');
     const aboutItemVersion = await driver.findElement(versionElementLocator).getText();
-    expect(aboutItemVersion).toEqual('Unknown');
+    expect(aboutItemVersion).toEqual(packageJson.version);
   });
 
   it('select ranges app and extract text', async () => {
