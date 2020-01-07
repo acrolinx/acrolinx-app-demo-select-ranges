@@ -11,6 +11,7 @@ dotenv.config();
 
 const ACROLINX_API_TOKEN = process.env.ACROLINX_API_TOKEN;
 const TEST_SERVER_URL = process.env.TEST_SERVER_URL;
+const TEST_HEADLESS = process.env.TEST_HEADLESS !== 'false';
 
 const TIMEOUT_MS = 20_000;
 
@@ -21,13 +22,18 @@ describe('live demo', () => {
   jest.setTimeout(TIMEOUT_MS);
 
   beforeEach(async () => {
-    if (!fs.existsSync('./tmp')){
+    if (!fs.existsSync('./tmp')) {
       fs.mkdirSync('./tmp');
+    }
+
+    const chromeOptions = new chrome.Options();
+    if (TEST_HEADLESS) {
+      chromeOptions.headless();
     }
 
     driver = new webdriver.Builder()
       .forBrowser('chrome')
-      .setChromeOptions(new chrome.Options().headless())
+      .setChromeOptions(chromeOptions)
       .build();
     driver.manage().setTimeouts({implicit: TIMEOUT_MS / 2});
 
@@ -48,6 +54,14 @@ describe('live demo', () => {
   afterEach(() => {
     driver.close();
     driver.quit();
+  });
+
+  it('verify version in about tab', async () => {
+    await driver.findElement(By.className('icon-menu')).click();
+    await driver.findElement(By.className('icon-about')).click();
+    const versionElementLocator = By.xpath('//div[@class="about-tab-label" and text()="Select Ranges"]/following-sibling::div');
+    const aboutItemVersion = await driver.findElement(versionElementLocator).getText();
+    expect(aboutItemVersion).toEqual('Unknown');
   });
 
   it('select ranges app and extract text', async () => {
