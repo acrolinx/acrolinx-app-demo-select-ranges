@@ -78,7 +78,11 @@ describe('live demo', () => {
     const appIframe = driver.findElement(By.css('.tab-content--active.selectRangesTab iframe'));
     driver.switchTo().frame(appIframe);
 
-    await driver.sleep(500);
+    await driver.sleep(1000);
+
+    const screenShotAfterExtractBase64Encoded = await driver.takeScreenshot();
+    fs.writeFileSync('tmp/after-extract-text.png', screenShotBase64Encoded, 'base64');
+
     const appMainElement = driver.findElement(By.css('main'));
     expect(await appMainElement.getText()).toEqual(TEST_TEXT);
   });
