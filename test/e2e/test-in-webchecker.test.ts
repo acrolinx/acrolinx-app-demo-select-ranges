@@ -81,7 +81,7 @@ describe('live demo', () => {
     await driver.sleep(1000);
 
     const screenShotAfterExtractBase64Encoded = await driver.takeScreenshot();
-    fs.writeFileSync('tmp/after-extract-text.png', screenShotBase64Encoded, 'base64');
+    fs.writeFileSync('tmp/after-extract-text.png', screenShotAfterExtractBase64Encoded, 'base64');
 
     const appMainElement = driver.findElement(By.css('main'));
     expect(await appMainElement.getText()).toEqual(TEST_TEXT);
