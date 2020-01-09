@@ -1,6 +1,6 @@
 import chromedriver from 'chromedriver';
 import * as dotenv from 'dotenv';
-import webdriver from 'selenium-webdriver';
+import webdriver, {WebElement} from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import packageJson from '../../package.json';
 import {ScreenShooter} from '../jest-screen-shooter/screen-shooter';
@@ -21,6 +21,7 @@ describe('live demo', () => {
 
   let driver: webdriver.ThenableWebDriver;
   let screenShooter: ScreenShooter;
+  let webCheckerIFrame: WebElement;
   jest.setTimeout(TIMEOUT_MS);
 
   beforeEach(async () => {
@@ -45,8 +46,8 @@ describe('live demo', () => {
     await driver.executeScript(`localStorage.setItem('acrolinx.sidebar.authtokens', arguments[0])`,
       JSON.stringify({[TEST_SERVER_URL]: ACROLINX_API_TOKEN}));
 
-    const webCheckerIframe = driver.findElement(By.css('#webchecker iframe'));
-    driver.switchTo().frame(webCheckerIframe);
+    webCheckerIFrame =  await driver.findElement(By.css('#webchecker iframe'));
+    driver.switchTo().frame(webCheckerIFrame);
     const sidebarIFrame = driver.findElement(By.css('#sidebarContainer iframe'));
     await driver.switchTo().frame(sidebarIFrame);
   });
@@ -65,7 +66,7 @@ describe('live demo', () => {
     expect(aboutItemVersion).toEqual(packageJson.version);
   });
 
-  describe('select ranges app and extract text', () => {
+  describe('after text extraction', () => {
     beforeEach(async () => {
       const selectRangesTabHeader = await driver.findElement(By.id('selectRanges'));
       await driver.sleep(500);
@@ -88,8 +89,34 @@ describe('live demo', () => {
     });
 
     it('select ranges in the editor', async () => {
-      const appMainElement = driver.findElement(By.css('main'));
-      expect(await appMainElement.getText()).toEqual(TEST_TEXT);
+      const wordElements = await driver.findElements(By.xpath('//*[contains(concat(" ", @class, " "), "marking")]'));
+
+      const wordToSelect = 'textt';
+      expect(await wordElements[1].getText()).toEqual(wordToSelect);
+
+      wordElements[1].click();
+
+      driver.switchTo().defaultContent();
+      driver.switchTo().frame(webCheckerIFrame);
+
+      const selectedText = await driver.executeScript(() => getSelection()?.toString());
+      expect(selectedText).toEqual(wordToSelect);
     });
+
+    it('replace ranges in the editor', async () => {
+      const wordElements = await driver.findElements(By.xpath('//*[contains(concat(" ", @class, " "), "marking")]'));
+      const secondWordElement = wordElements[1];
+
+      expect(await secondWordElement.getText()).toEqual('textt');
+
+      driver.actions().doubleClick(secondWordElement).perform();
+
+      driver.switchTo().defaultContent();
+      driver.switchTo().frame(webCheckerIFrame);
+
+      const selectedText = await driver.executeScript(() => getSelection()?.toString());
+      expect(selectedText).toEqual('TEXTT!');
+    });
+
   });
 });
