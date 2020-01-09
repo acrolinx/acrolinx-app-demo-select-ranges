@@ -1,9 +1,9 @@
 import chromedriver from 'chromedriver';
 import * as dotenv from 'dotenv';
-import fs from 'fs';
 import webdriver from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import packageJson from '../../package.json';
+import {ScreenShooter} from '../jest-screen-shooter/screen-shooter';
 
 const By = webdriver.By;
 chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
@@ -20,13 +20,10 @@ describe('live demo', () => {
   const TEST_TEXT = 'This textt has an problemm.';
 
   let driver: webdriver.ThenableWebDriver;
+  let screenShooter: ScreenShooter;
   jest.setTimeout(TIMEOUT_MS);
 
   beforeEach(async () => {
-    if (!fs.existsSync('./tmp')) {
-      fs.mkdirSync('./tmp');
-    }
-
     const chromeOptions = new chrome.Options();
     if (TEST_HEADLESS) {
       chromeOptions.headless();
@@ -37,6 +34,8 @@ describe('live demo', () => {
       .setChromeOptions(chromeOptions)
       .build();
     driver.manage().setTimeouts({implicit: TIMEOUT_MS / 2});
+
+    screenShooter = new ScreenShooter(driver);
 
     if (!ACROLINX_API_TOKEN || !TEST_SERVER_URL) {
       throw new Error('Please configure env variables ACROLINX_API_TOKEN and TEST_SERVER_URL!');
@@ -52,9 +51,10 @@ describe('live demo', () => {
     await driver.switchTo().frame(sidebarIFrame);
   });
 
-  afterEach(() => {
-    driver.close();
-    driver.quit();
+  afterEach(async () => {
+    await screenShooter.shootAfterEach();
+    await driver.close();
+    await driver.quit();
   });
 
   it('verify version in about tab', async () => {
@@ -65,26 +65,31 @@ describe('live demo', () => {
     expect(aboutItemVersion).toEqual(packageJson.version);
   });
 
-  it('select ranges app and extract text', async () => {
-    const selectRangesTabHeader = await driver.findElement(By.id('selectRanges'));
-    await driver.sleep(500);
-    await selectRangesTabHeader.click();
+  describe('select ranges app and extract text', () => {
+    beforeEach(async () => {
+      const selectRangesTabHeader = await driver.findElement(By.id('selectRanges'));
+      await driver.sleep(500);
+      await selectRangesTabHeader.click();
 
-    const screenShotBase64Encoded = await driver.takeScreenshot();
-    fs.writeFileSync('tmp/before-extract-text.png', screenShotBase64Encoded, 'base64');
+      await screenShooter.shoot('before-extract-text');
 
-    driver.findElement(By.xpath('//button[text() = "EXTRACT TEXT"]')).click();
+      driver.findElement(By.xpath('//button[text() = "EXTRACT TEXT"]')).click();
 
-    const appIframe = driver.findElement(By.css('.tab-content--active.selectRangesTab iframe'));
-    driver.switchTo().frame(appIframe);
+      const appIframe = driver.findElement(By.css('.tab-content--active.selectRangesTab iframe'));
+      driver.switchTo().frame(appIframe);
 
-    await driver.sleep(1000);
+      await driver.wait(driver.findElement(By.className('marking')));
+      await screenShooter.shoot('after-extract-text');
+    });
 
-    const screenShotAfterExtractBase64Encoded = await driver.takeScreenshot();
-    fs.writeFileSync('tmp/after-extract-text.png', screenShotAfterExtractBase64Encoded, 'base64');
+    it('display the extracted text', async () => {
+      const appMainElement = driver.findElement(By.css('main'));
+      expect(await appMainElement.getText()).toEqual(TEST_TEXT);
+    });
 
-    const appMainElement = driver.findElement(By.css('main'));
-    expect(await appMainElement.getText()).toEqual(TEST_TEXT);
+    it('select ranges in the editor', async () => {
+      const appMainElement = driver.findElement(By.css('main'));
+      expect(await appMainElement.getText()).toEqual(TEST_TEXT);
+    });
   });
-
 });
