@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import * as _ from 'lodash';
 import {OffsetRange} from '@acrolinx/app-sdk';
+import * as _ from 'lodash';
 
 export const MARKING_CSS_CLASS = 'marking';
+export const INVALID_MARKING_CSS_CLASS = 'invalid';
 
 export interface Match {
   surface: string;
@@ -54,8 +55,7 @@ export function createMarkedHtml(text: string, sortedMarkings: readonly Marking[
 
 export function createMarkingHtml(marking: Marking, text: string) {
   const escapedText = escapeText(text.substring(marking.begin, marking.end));
-  const cssClasses = MARKING_CSS_CLASS;
-  return `<span id="${marking.id}" class="marking ${cssClasses}">${escapedText}</span>`
+  return `<span id="${marking.id}" class="${MARKING_CSS_CLASS}">${escapedText}</span>`
 }
 
 export function escapeText(text: string) {

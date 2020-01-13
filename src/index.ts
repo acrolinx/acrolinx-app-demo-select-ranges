@@ -25,7 +25,7 @@ import {
 import * as _ from 'lodash';
 import packageJson from '../package.json';
 import './index.css';
-import {Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
+import {INVALID_MARKING_CSS_CLASS, Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
 
 const appApi = initApi({
   title: 'Select Ranges',
@@ -98,7 +98,7 @@ function startApp() {
       const element = document.getElementById(marking.id);
       if (element) {
         element.title = 'This match is out of date. Your document has changed since we have found this match. Try to extract text again.';
-        element.className = MARKING_CSS_CLASS + ' invalid';
+        element.className = MARKING_CSS_CLASS + ' ' + INVALID_MARKING_CSS_CLASS;
       }
     });
   });

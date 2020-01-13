@@ -56,7 +56,7 @@
   "homepage": "./",
   "jest": {
     "setupFilesAfterEnv": [
-      "./test/jest-screen-shooter/jest.setup.ts"
+      "./test/test-utils/jest-screen-shooter/jest.setup.ts"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
