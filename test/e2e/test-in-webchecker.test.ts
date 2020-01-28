@@ -20,6 +20,8 @@ const TEST_HEADLESS = process.env.TEST_HEADLESS !== 'false';
 const TIMEOUT_MS = 20_000;
 
 const MARKING_LOCATOR = By.className(MARKING_CSS_CLASS);
+const APP_ID = 'selectRanges';
+
 
 describe('live demo', () => {
   const TEST_TEXT = 'This textt has an problemm.';
@@ -70,7 +72,7 @@ describe('live demo', () => {
 
   describe('after text extraction', () => {
     beforeEach(async () => {
-      await sidebar.gotoApp('selectRanges');
+      await sidebar.gotoAppTab(APP_ID);
       await screenShooter.shoot('before-extract-text');
       await sidebar.clickButton('EXTRACT TEXT');
       await sidebar.switchToAppIFrame();
@@ -122,7 +124,7 @@ describe('live demo', () => {
         const wordElement = wordElements[i];
         expect(await wordElement.getText()).toEqual(word);
 
-        expect(await wordElement.getAttribute('class')).not.toContain(INVALID_MARKING_CSS_CLASS);;
+        expect(await wordElement.getAttribute('class')).not.toContain(INVALID_MARKING_CSS_CLASS);
         driver.actions().doubleClick(wordElement).perform();
         expect(await wordElement.getAttribute('class')).toContain(INVALID_MARKING_CSS_CLASS);
 
@@ -136,6 +138,22 @@ describe('live demo', () => {
       }
 
       expect(text).toEqual('THIS! TEXTT! HAS! AN! PROBLEMM!.');
+    });
+
+    it('Applying an issue suggestion should invalidate the corresponding ranges in the app', async () => {
+      await webChecker.switchTo();
+      await sidebar.switchTo();
+      await sidebar.gotoIssuesTab();
+
+      await sidebar.clickButton('CHECK');
+      await sidebar.clickSuggestion('text');
+
+      await sidebar.gotoAppTab(APP_ID);
+      await sidebar.switchToAppIFrame();
+      const wordElements = await driver.findElements(MARKING_LOCATOR);
+      expect(await wordElements[0].getAttribute('class')).not.toContain(INVALID_MARKING_CSS_CLASS);
+      expect(await wordElements[1].getAttribute('class')).toContain(INVALID_MARKING_CSS_CLASS);
+      expect(await wordElements[2].getAttribute('class')).not.toContain(INVALID_MARKING_CSS_CLASS);
     });
   });
 });

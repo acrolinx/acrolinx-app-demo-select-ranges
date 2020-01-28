@@ -20,7 +20,7 @@ export class SeleniumSidebarDriver {
     }
   }
 
-  async gotoApp(appId: string) {
+  async gotoAppTab(appId: string) {
     const selectRangesTabHeader = await this.driver.findElement(By.id(appId));
     await this.driver.sleep(500);
     await selectRangesTabHeader.click();
@@ -31,7 +31,15 @@ export class SeleniumSidebarDriver {
     this.driver.switchTo().frame(appIframe);
   }
 
+  async gotoIssuesTab() {
+    await this.driver.findElement(By.css(`.icon-canCheck`)).click();
+  }
+
   async clickButton(buttonText: string) {
     return this.driver.findElement(By.xpath(`//button[text() = "${buttonText}"]`)).click();
+  }
+
+  async clickSuggestion(suggestionText: string) {
+    return this.driver.findElement(By.xpath(`//button[@class="suggestionLabel" and text() = "${suggestionText}"]`)).click();
   }
 }
