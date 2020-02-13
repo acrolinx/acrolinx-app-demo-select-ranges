@@ -15,11 +15,9 @@
  */
 
 import {
-  ApiCommands,
-  ApiEvents,
   ExtractedTextEvent,
   initApi,
-  isInvalid,
+  isInvalid, RequiredCommands, RequiredEvents,
   TextRangesExpiredEvent
 } from '@acrolinx/app-sdk';
 import * as _ from 'lodash';
@@ -37,8 +35,8 @@ const appApi = initApi({
     tooltip: 'Extract text and select words in the document'
   },
 
-  requiredEvents: [ApiEvents.invalidRanges, ApiEvents.textExtracted],
-  requiredCommands: [ApiCommands.selectRanges, ApiCommands.replaceRanges]
+  requiredEvents: [RequiredEvents.invalidRanges, RequiredEvents.textExtracted],
+  requiredCommands: [RequiredCommands.selectRanges, RequiredCommands.replaceRanges]
 });
 
 
