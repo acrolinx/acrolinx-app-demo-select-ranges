@@ -55,6 +55,10 @@ describe('live demo', () => {
     await webChecker.switchTo();
 
     sidebar = new SeleniumSidebarDriver(driver, webChecker.getSidebarIFrame());
+
+    /* Not sure, why it helps, but otherwise we got an Timeout in headless chrome. */
+    await driver.sleep(1000);
+
     await sidebar.switchTo();
   });
 
