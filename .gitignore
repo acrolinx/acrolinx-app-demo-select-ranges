@@ -26,3 +26,6 @@ src/react-app-env.d.ts
 .private
 .env
 /tmp
+
+# Eclipse
+.project
