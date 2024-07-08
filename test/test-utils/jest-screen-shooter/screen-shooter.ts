@@ -1,6 +1,10 @@
 import fsExtra from 'fs-extra';
 import path from 'path';
 import webdriver from 'selenium-webdriver';
+//import jasmine from 'jasmine';
+
+const Jasmine = require('jasmine');
+const jasmine = new Jasmine();
 
 export const SCREENSHOT_FOLDER = 'tmp/screenshots';
 
@@ -16,8 +20,7 @@ export class ScreenShooter {
   public static initJasmineReporter() {
     fsExtra.removeSync(SCREENSHOT_FOLDER);
 
-    // @ts-ignore
-    jasmine.getEnv().addReporter({
+    jasmine.jasmine.getEnv().addReporter({
       specStarted: (result?: CurrentTest) => {
         ScreenShooter.currentTest = result;
       },

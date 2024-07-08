@@ -9,7 +9,6 @@ import {SeleniumSidebarDriver} from '../test-utils/selenium-sidebar-driver';
 import {SeleniumWebCheckerDriver} from '../test-utils/selenium-webchecker-driver';
 
 const By = webdriver.By;
-chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
 dotenv.config();
 
@@ -36,12 +35,13 @@ describe('live demo', () => {
   beforeEach(async () => {
     const chromeOptions = new chrome.Options();
     if (TEST_HEADLESS) {
-      chromeOptions.headless();
+      chromeOptions.addArguments('--headless=new');
     }
 
     driver = new webdriver.Builder()
       .forBrowser('chrome')
       .setChromeOptions(chromeOptions)
+      .setChromeService(new chrome.ServiceBuilder(chromedriver.path))
       .build();
     driver.manage().setTimeouts({implicit: TIMEOUT_MS / 2});
 

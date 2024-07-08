@@ -55,13 +55,21 @@ function startApp() {
     return result;
   }
 
+  function isError(error: any): error is NodeJS.ErrnoException {
+    return error instanceof Error;
+  }
+
   function onTextExtracted(event: ExtractedTextEvent) {
     try {
       const markedIssuesResult = markIssues(event.text, findMatches(event.text, matchRegExpElement.value));
       markings = markedIssuesResult.markings;
       mainElement.innerHTML = markedIssuesResult.html;
     } catch (e) {
-      mainElement.innerText = e.message;
+      if (isError(e)) {
+        mainElement.innerText = e.message;
+      } else {
+        mainElement.innerText = String(e).valueOf();
+      }
     }
   }
 
