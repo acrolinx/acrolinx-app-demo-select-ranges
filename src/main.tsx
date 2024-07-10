@@ -55,6 +55,7 @@ function startApp() {
     return result;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function isError(error: any): error is NodeJS.ErrnoException {
     return error instanceof Error;
   }

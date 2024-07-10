@@ -3,7 +3,7 @@ import path from 'path';
 import webdriver from 'selenium-webdriver';
 //import jasmine from 'jasmine';
 
-const Jasmine = require('jasmine');
+import Jasmine from 'jasmine';
 const jasmine = new Jasmine();
 
 export const SCREENSHOT_FOLDER = 'tmp/screenshots';
