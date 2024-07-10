@@ -35,6 +35,7 @@ describe('live demo', () => {
 
   beforeEach(async () => {
     const chromeOptions = new chrome.Options();
+    chromeOptions.addArguments('--disable-web-security');
     if (TEST_HEADLESS) {
       chromeOptions.addArguments('--headless=new');
     }
@@ -58,7 +59,7 @@ describe('live demo', () => {
     sidebar = new SeleniumSidebarDriver(driver, webChecker.getSidebarIFrame());
 
     /* Not sure, why it helps, but otherwise we got an Timeout in headless chrome. */
-   // await driver.sleep(1000);
+   await driver.sleep(5000);
 
     await sidebar.switchTo();
   });
@@ -92,7 +93,7 @@ describe('live demo', () => {
       console.log(text);
       console.log(TEST_TEXT);
       expect(text).toEqual(TEST_TEXT);
-    }, 10000000);
+    });
 
     test('select ranges in the editor', async () => {
       const wordElements = await driver.findElements(MARKING_LOCATOR);
