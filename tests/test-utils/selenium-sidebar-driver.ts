@@ -28,7 +28,7 @@ export class SeleniumSidebarDriver {
 
   async switchToAppIFrame() {
     const appIframe = await this.driver.findElement(By.css(`.tab-content--active.selectRangesTab iframe`));
-    this.driver.switchTo().frame(appIframe);
+    await this.driver.switchTo().frame(appIframe);
   }
 
   async gotoIssuesTab() {

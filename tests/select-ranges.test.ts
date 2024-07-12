@@ -3,10 +3,10 @@ import * as dotenv from 'dotenv';
 import webdriver from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import packageJson from '../package.json';
-import {INVALID_MARKING_CSS_CLASS, MARKING_CSS_CLASS} from '../src/markings';
-import {ScreenShooter} from './test-utils/jest-screen-shooter/screen-shooter';
-import {SeleniumSidebarDriver} from './test-utils/selenium-sidebar-driver';
-import {SeleniumWebCheckerDriver} from './test-utils/selenium-webchecker-driver';
+import { INVALID_MARKING_CSS_CLASS, MARKING_CSS_CLASS } from '../src/markings';
+import { ScreenShooter } from './test-utils/jest-screen-shooter/screen-shooter';
+import { SeleniumSidebarDriver } from './test-utils/selenium-sidebar-driver';
+import { SeleniumWebCheckerDriver } from './test-utils/selenium-webchecker-driver';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const By = webdriver.By;
@@ -31,7 +31,6 @@ describe('live demo', () => {
   let screenShooter: ScreenShooter;
   let webChecker: SeleniumWebCheckerDriver;
   let sidebar: SeleniumSidebarDriver;
-  // jest.setTimeout(TIMEOUT_MS);
 
   beforeEach(async () => {
     const chromeOptions = new chrome.Options();
@@ -45,7 +44,7 @@ describe('live demo', () => {
       .setChromeOptions(chromeOptions)
       .setChromeService(new chrome.ServiceBuilder(chromedriver.path))
       .build();
-    driver.manage().setTimeouts({implicit: TIMEOUT_MS / 2});
+    driver.manage().setTimeouts({ implicit: TIMEOUT_MS / 2 });
 
     screenShooter = new ScreenShooter(driver);
 
@@ -58,8 +57,8 @@ describe('live demo', () => {
 
     sidebar = new SeleniumSidebarDriver(driver, webChecker.getSidebarIFrame());
 
-    /* Not sure, why it helps, but otherwise we got an Timeout in headless chrome. */
-   await driver.sleep(5000);
+    /* Sidebar can take some time to render completely */
+    await driver.sleep(5000);
 
     await sidebar.switchTo();
   });
@@ -83,12 +82,12 @@ describe('live demo', () => {
       await sidebar.clickButton('EXTRACT TEXT');
       await sidebar.switchToAppIFrame();
 
-      await driver.wait(driver.findElement(MARKING_LOCATOR));
+      await driver.wait(driver.findElement(By.css("." + MARKING_CSS_CLASS)));
       await screenShooter.shoot('after-extract-text');
     });
 
     test('display the extracted text', async () => {
-      const markingsParent = await driver.findElement(MARKING_LOCATOR).findElement(By.xpath('..'));
+      const markingsParent = await driver.findElement(By.css("." + MARKING_CSS_CLASS)).findElement(By.xpath('..'));
       const text = await markingsParent.getText()
       console.log(text);
       console.log(TEST_TEXT);
@@ -98,7 +97,7 @@ describe('live demo', () => {
     test('select ranges in the editor', async () => {
       const wordElements = await driver.findElements(MARKING_LOCATOR);
       expect(await wordElements[1].getText()).toEqual(WORDS[1]);
-      wordElements[1].click();
+      await wordElements[1].click();
 
       await webChecker.switchTo();
       expect(await webChecker.getSelectedText()).toEqual(WORDS[1]);
@@ -110,7 +109,7 @@ describe('live demo', () => {
 
       expect(await secondWordElement.getText()).toEqual(WORDS[1]);
 
-      driver.actions().doubleClick(secondWordElement).perform();
+      await driver.actions().doubleClick(secondWordElement).perform();
       expect(await secondWordElement.getAttribute('class')).toContain(INVALID_MARKING_CSS_CLASS);
 
       await webChecker.switchTo();
@@ -134,7 +133,7 @@ describe('live demo', () => {
         expect(await wordElement.getText()).toEqual(word);
 
         expect(await wordElement.getAttribute('class')).not.toContain(INVALID_MARKING_CSS_CLASS);
-        driver.actions().doubleClick(wordElement).perform();
+        await driver.actions().doubleClick(wordElement).perform();
         expect(await wordElement.getAttribute('class')).toContain(INVALID_MARKING_CSS_CLASS);
 
         await webChecker.switchTo();
