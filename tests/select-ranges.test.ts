@@ -81,12 +81,12 @@ describe('live demo', () => {
       await sidebar.clickButton('EXTRACT TEXT');
       await sidebar.switchToAppIFrame();
 
-      await driver.wait(driver.findElement(By.css('.' + MARKING_CSS_CLASS)));
+      await driver.wait(driver.findElement(MARKING_LOCATOR));
       await screenShooter.shoot('after-extract-text');
     });
 
     test('display the extracted text', async () => {
-      const markingsParent = await driver.findElement(By.css('.' + MARKING_CSS_CLASS)).findElement(By.xpath('..'));
+      const markingsParent = await driver.findElement(MARKING_LOCATOR).findElement(By.xpath('..'));
       const text = await markingsParent.getText();
       console.log(text);
       console.log(TEST_TEXT);
