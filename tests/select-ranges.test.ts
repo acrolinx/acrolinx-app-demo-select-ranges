@@ -22,10 +22,9 @@ const TIMEOUT_MS = 20_000;
 const MARKING_LOCATOR = By.className(MARKING_CSS_CLASS);
 const APP_ID = 'selectRanges';
 
-
 describe('live demo', () => {
   const TEST_TEXT = 'This textt has an problemm.';
-  const WORDS = TEST_TEXT.split(/[\s.,:"]+/g).filter(it => it !== '');
+  const WORDS = TEST_TEXT.split(/[\s.,:"]+/g).filter((it) => it !== '');
 
   let driver: webdriver.ThenableWebDriver;
   let screenShooter: ScreenShooter;
@@ -82,13 +81,13 @@ describe('live demo', () => {
       await sidebar.clickButton('EXTRACT TEXT');
       await sidebar.switchToAppIFrame();
 
-      await driver.wait(driver.findElement(By.css("." + MARKING_CSS_CLASS)));
+      await driver.wait(driver.findElement(By.css('.' + MARKING_CSS_CLASS)));
       await screenShooter.shoot('after-extract-text');
     });
 
     test('display the extracted text', async () => {
-      const markingsParent = await driver.findElement(By.css("." + MARKING_CSS_CLASS)).findElement(By.xpath('..'));
-      const text = await markingsParent.getText()
+      const markingsParent = await driver.findElement(By.css('.' + MARKING_CSS_CLASS)).findElement(By.xpath('..'));
+      const text = await markingsParent.getText();
       console.log(text);
       console.log(TEST_TEXT);
       expect(text).toEqual(TEST_TEXT);

@@ -1,13 +1,22 @@
-import webdriver, {By, WebElement, WebElementPromise} from 'selenium-webdriver';
+import webdriver, { By, WebElement, WebElementPromise } from 'selenium-webdriver';
 
 export class SeleniumWebCheckerDriver {
-  private constructor(private driver: webdriver.ThenableWebDriver, private webCheckerIFrame: WebElement) {
-  }
+  private constructor(
+    private driver: webdriver.ThenableWebDriver,
+    private webCheckerIFrame: WebElement,
+  ) {}
 
-  static async open(driver: webdriver.ThenableWebDriver, acrolinxUrl: string, apiToken: string, text: string): Promise<SeleniumWebCheckerDriver> {
+  static async open(
+    driver: webdriver.ThenableWebDriver,
+    acrolinxUrl: string,
+    apiToken: string,
+    text: string,
+  ): Promise<SeleniumWebCheckerDriver> {
     await driver.get(acrolinxUrl + '/webchecker/index.html?text=' + text);
-    await driver.executeScript(`localStorage.setItem('acrolinx.sidebar.authtokens', arguments[0])`,
-      JSON.stringify({[acrolinxUrl]: apiToken}));
+    await driver.executeScript(
+      `localStorage.setItem('acrolinx.sidebar.authtokens', arguments[0])`,
+      JSON.stringify({ [acrolinxUrl]: apiToken }),
+    );
     const webCheckerIFrame = await driver.findElement(By.css('#webchecker iframe'));
     return new SeleniumWebCheckerDriver(driver, webCheckerIFrame);
   }
@@ -18,11 +27,11 @@ export class SeleniumWebCheckerDriver {
   }
 
   getSidebarIFrame(): WebElementPromise {
-    return this.driver.findElement(By.css('#sidebarContainer iframe'))
+    return this.driver.findElement(By.css('#sidebarContainer iframe'));
   }
 
   async getSelectedText() {
-    return this.driver.executeScript(() => getSelection()?.toString())
+    return this.driver.executeScript(() => getSelection()?.toString());
   }
 
   async getText(): Promise<string> {

@@ -41,9 +41,13 @@ export class ScreenShooter {
   async shoot(name: string) {
     const testName = ScreenShooter.currentTest?.fullName ?? 'unknown_test';
     const screenShotAfterExtractBase64Encoded = await this.webdriver.takeScreenshot();
-    const fileNameBase = `${testName}_${(this.counter)}_${name}`.replace(' ', '_');
+    const fileNameBase = `${testName}_${this.counter}_${name}`.replace(' ', '_');
     this.counter += 1;
-    fsExtra.writeFileSync(path.join(SCREENSHOT_FOLDER, fileNameBase + '.png'), screenShotAfterExtractBase64Encoded, 'base64');
+    fsExtra.writeFileSync(
+      path.join(SCREENSHOT_FOLDER, fileNameBase + '.png'),
+      screenShotAfterExtractBase64Encoded,
+      'base64',
+    );
   }
 
   /**

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
- html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: Roboto, Helvetica, Arial, Sans-Serif;
@@ -59,7 +60,7 @@ main {
   margin-right: 5px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
   transition: all 0.5s;
-  transform: scale(1.0);
+  transform: scale(1);
 }
 
 .marking:not(.invalid):hover {

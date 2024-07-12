@@ -1,3 +1,3 @@
-import {ScreenShooter} from './screen-shooter';
+import { ScreenShooter } from './screen-shooter';
 
 ScreenShooter.initJasmineReporter();

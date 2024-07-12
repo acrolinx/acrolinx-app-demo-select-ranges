@@ -17,28 +17,30 @@
 import {
   ExtractedTextEvent,
   initApi,
-  isInvalid, RequiredCommands, RequiredEvents,
-  TextRangesExpiredEvent
+  isInvalid,
+  RequiredCommands,
+  RequiredEvents,
+  TextRangesExpiredEvent,
 } from '@acrolinx/app-sdk';
 import * as _ from 'lodash';
 import packageJson from '../package.json';
 import './index.css';
-import {INVALID_MARKING_CSS_CLASS, Marking, MARKING_CSS_CLASS, markIssues, Match} from './markings';
+import { INVALID_MARKING_CSS_CLASS, Marking, MARKING_CSS_CLASS, markIssues, Match } from './markings';
 
 const appApi = initApi({
   title: 'Select Ranges',
   version: packageJson.version,
-  appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU2VsZWN0IFJhbmdlcyIsImlkIjoiYzJlZTZjMGItMThhMC00YjI3LWFiNzctYWY2NjQzODUxMzQ5IiwidHlwZSI6IkFQUCIsImlhdCI6MTU2MTY0NzQ5MX0.hqHcZBKduKjElLl5a4Mo8Tf6GdCnEPR9iBD9QmuiRU0',
+  appSignature:
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU2VsZWN0IFJhbmdlcyIsImlkIjoiYzJlZTZjMGItMThhMC00YjI3LWFiNzctYWY2NjQzODUxMzQ5IiwidHlwZSI6IkFQUCIsImlhdCI6MTU2MTY0NzQ5MX0.hqHcZBKduKjElLl5a4Mo8Tf6GdCnEPR9iBD9QmuiRU0',
 
   button: {
     text: 'Extract Text',
-    tooltip: 'Extract text and select words in the document'
+    tooltip: 'Extract text and select words in the document',
   },
 
   requiredEvents: [RequiredEvents.invalidRanges, RequiredEvents.textExtracted],
-  requiredCommands: [RequiredCommands.selectRanges, RequiredCommands.replaceRanges]
+  requiredCommands: [RequiredCommands.selectRanges, RequiredCommands.replaceRanges],
 });
-
 
 function startApp() {
   let markings: Marking[] = [];
@@ -50,7 +52,7 @@ function startApp() {
     const regex = new RegExp(pattern, 'g');
     let match: RegExpExecArray | null;
     while ((match = regex.exec(text)) !== null && match.index < text.length) {
-      result.push({surface: match[0], range: {begin: match.index, end: match.index + match[0].length}})
+      result.push({ surface: match[0], range: { begin: match.index, end: match.index + match[0].length } });
     }
     return result;
   }
@@ -76,35 +78,36 @@ function startApp() {
 
   mainElement.addEventListener('click', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
-    const marking = _.find(markings, {id: markingId});
+    const marking = _.find(markings, { id: markingId });
     if (marking) {
       appApi.commands.selectRanges([marking]);
     }
-  })
+  });
 
   mainElement.addEventListener('dblclick', (ev: MouseEvent) => {
     const markingId = (ev.target as HTMLElement).id;
-    const marking = _.find(markings, {id: markingId});
+    const marking = _.find(markings, { id: markingId });
     if (marking) {
-      appApi.commands.replaceRanges([{
-        ...marking,
-        replacement: marking.match.surface.toUpperCase() + '!'
-      }]);
+      appApi.commands.replaceRanges([
+        {
+          ...marking,
+          replacement: marking.match.surface.toUpperCase() + '!',
+        },
+      ]);
     }
-  })
+  });
 
-  appApi.events.textExtracted.addEventListener(onTextExtracted)
+  appApi.events.textExtracted.addEventListener(onTextExtracted);
 
   appApi.events.invalidRanges.addEventListener((event: TextRangesExpiredEvent) => {
-    const [expiredMarkings, validMarkings] = _.partition(markings, marking =>
-      isInvalid(event, marking)
-    );
+    const [expiredMarkings, validMarkings] = _.partition(markings, (marking) => isInvalid(event, marking));
 
     markings = validMarkings;
-    expiredMarkings.forEach(marking => {
+    expiredMarkings.forEach((marking) => {
       const element = document.getElementById(marking.id);
       if (element) {
-        element.title = 'This match is out of date. Your document has changed since we have found this match. Try to extract text again.';
+        element.title =
+          'This match is out of date. Your document has changed since we have found this match. Try to extract text again.';
         element.className = MARKING_CSS_CLASS + ' ' + INVALID_MARKING_CSS_CLASS;
       }
     });
@@ -113,7 +116,7 @@ function startApp() {
   const useDummyData = _.includes(window.location.href, 'usedummydata');
   onTextExtracted({
     text: useDummyData ? 'This is an errorr and an problemm.' : '',
-    languageId: 'en'
+    languageId: 'en',
   });
 }
 
