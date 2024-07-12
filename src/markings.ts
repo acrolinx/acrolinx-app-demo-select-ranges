@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {OffsetRange} from '@acrolinx/app-sdk';
+import { OffsetRange } from '@acrolinx/app-sdk';
 import * as _ from 'lodash';
 
 export const MARKING_CSS_CLASS = 'marking';
@@ -30,20 +30,23 @@ export type HTML = string;
 export class Marking {
   id: string = _.uniqueId('marking');
 
-  constructor(public begin: number, public end: number, public match: Match) {
-  }
+  constructor(
+    public begin: number,
+    public end: number,
+    public match: Match,
+  ) {}
 }
 
-export function markIssues(text: string, words: Match[]): { html: HTML, markings: Marking[] } {
-  const markings = words.map(w => new Marking(w.range.begin, w.range.end, w));
-  return {markings, html: createMarkedHtml(text, markings)};
+export function markIssues(text: string, words: Match[]): { html: HTML; markings: Marking[] } {
+  const markings = words.map((w) => new Marking(w.range.begin, w.range.end, w));
+  return { markings, html: createMarkedHtml(text, markings) };
 }
 
 export function createMarkedHtml(text: string, sortedMarkings: readonly Marking[]): HTML {
   let pos = 0;
   let outputHtml = '';
 
-  sortedMarkings.forEach(marking => {
+  sortedMarkings.forEach((marking) => {
     outputHtml += escapeText(text.substring(pos, marking.begin));
     outputHtml += createMarkingHtml(marking, text);
     pos = marking.end;
@@ -55,7 +58,7 @@ export function createMarkedHtml(text: string, sortedMarkings: readonly Marking[
 
 export function createMarkingHtml(marking: Marking, text: string) {
   const escapedText = escapeText(text.substring(marking.begin, marking.end));
-  return `<span id="${marking.id}" class="${MARKING_CSS_CLASS}">${escapedText}</span>`
+  return `<span id="${marking.id}" class="${MARKING_CSS_CLASS}">${escapedText}</span>`;
 }
 
 export function escapeText(text: string) {

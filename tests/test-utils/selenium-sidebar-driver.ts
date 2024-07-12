@@ -1,8 +1,10 @@
-import webdriver, {By, WebElement} from 'selenium-webdriver';
+import webdriver, { By, WebElement } from 'selenium-webdriver';
 
 export class SeleniumSidebarDriver {
-  constructor(private driver: webdriver.ThenableWebDriver, private sidebarIFrame: WebElement) {
-  }
+  constructor(
+    private driver: webdriver.ThenableWebDriver,
+    private sidebarIFrame: WebElement,
+  ) {}
 
   public switchTo(): Promise<void> {
     return this.driver.switchTo().frame(this.sidebarIFrame);
@@ -15,10 +17,12 @@ export class SeleniumSidebarDriver {
 
   public aboutPage = {
     findValueForSoftwareComponentLabel: async (softwareComponentLabel: string) => {
-      const versionElementLocator = By.xpath(`//div[@class="about-tab-label" and text()="${softwareComponentLabel}"]/following-sibling::div`);
+      const versionElementLocator = By.xpath(
+        `//div[@class="about-tab-label" and text()="${softwareComponentLabel}"]/following-sibling::div`,
+      );
       return await this.driver.findElement(versionElementLocator).getText();
-    }
-  }
+    },
+  };
 
   async gotoAppTab(appId: string) {
     const selectRangesTabHeader = await this.driver.findElement(By.id(appId));
@@ -27,8 +31,8 @@ export class SeleniumSidebarDriver {
   }
 
   async switchToAppIFrame() {
-    const appIframe = await this.driver.findElement(By.css(`.tab-content--active iframe`));
-    this.driver.switchTo().frame(appIframe);
+    const appIframe = await this.driver.findElement(By.css(`.tab-content--active.selectRangesTab iframe`));
+    await this.driver.switchTo().frame(appIframe);
   }
 
   async gotoIssuesTab() {
@@ -40,6 +44,8 @@ export class SeleniumSidebarDriver {
   }
 
   async clickSuggestion(suggestionText: string) {
-    return this.driver.findElement(By.xpath(`//button[@class="suggestionLabel" and text() = "${suggestionText}"]`)).click();
+    return this.driver
+      .findElement(By.xpath(`//button[@class="suggestionLabel" and text() = "${suggestionText}"]`))
+      .click();
   }
 }
