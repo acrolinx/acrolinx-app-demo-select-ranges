@@ -27,7 +27,7 @@ jobs:
           install-chromedriver: true
           install-dependencies: true
       - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
-      - run: echo CHROME_BIN_PATH=${{ steps.setup-chrome.outputs.chrome-path }}
+      - run: echo "CHROME_BIN_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
 
       - name: Setup Node
         uses: actions/setup-node@v4
