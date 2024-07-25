@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v1
         with:
           install-chromedriver: true
