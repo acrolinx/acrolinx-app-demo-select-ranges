@@ -34,6 +34,10 @@ describe('live demo', () => {
   beforeEach(async () => {
     const chromeOptions = new chrome.Options();
     chromeOptions.addArguments('--disable-web-security');
+    if (process.env.CHROME_BIN_PATH) {
+      console.log(`Chrome Binary path: ${process.env.CHROME_BIN_PATH}`);
+      chromeOptions.setBinaryPath(process.env.CHROME_BIN_PATH);
+    }
     if (TEST_HEADLESS) {
       chromeOptions.addArguments('--headless=new');
     }

@@ -20,6 +20,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          install-chromedriver: true
+          install-dependencies: true
+      - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
+      - run: echo "CHROME_BIN_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+      - run: echo "CHROMEDRIVER_BIN_PATH=${{ steps.setup-chrome.outputs.chromedriver-path }}" >> $GITHUB_ENV
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -28,5 +38,6 @@ jobs:
       - name: Build And Run Tests
         run: |
           npm ci
+          npm run format:check
           npm run build
           npm run test
