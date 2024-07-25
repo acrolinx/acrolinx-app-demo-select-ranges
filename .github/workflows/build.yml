@@ -38,5 +38,6 @@ jobs:
       - name: Build And Run Tests
         run: |
           npm ci
+          npm run format:check
           npm run build
           npm run test

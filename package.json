@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:interactive": "vitest",
-    "format:check": "prettier . --check",
+    "format:check": "prettier . --check --max-warnings=0",
     "format": "prettier . --write"
   },
   "engines": {
