@@ -20,6 +20,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+      - run: chrome --version
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
