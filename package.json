@@ -36,7 +36,7 @@
     "@types/selenium-webdriver": "^4.1.24",
     "@vitejs/plugin-react": "^4.3.1",
     "browser-sync": "^3.0.2",
-    "chromedriver": "^127.0.1",
+    "chromedriver": "^127.0.2",
     "dotenv": "^16.4.5",
     "eslint": "^9.8.0",
     "fs-extra": "^11.2.0",
